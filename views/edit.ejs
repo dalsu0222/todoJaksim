@@ -1,0 +1,91 @@
+<%- include('header.ejs') %>
+
+<main>
+  <h2>수정하기</h2>
+  <form id="editForm">
+    <label for="title">할일입력</label>
+    <input
+      type="text"
+      name="title"
+      id="title"
+      placeholder="할일입력"
+      required
+    />
+
+    <label for="dateOfGoals">목표날짜</label>
+    <input type="date" name="dateOfGoals" id="dateOfGoals" />
+
+    <label hidden>작성일</label>
+    <input hidden type="date" name="dateOfCreate" id="dateOfCreate" />
+
+    <label for="todoDetail">상세내역</label>
+    <textarea name="todoDetail" id="todoDetail"></textarea>
+
+    <input type="submit" class="btnSubmit" id="btnSubmit" value="등록하기" />
+  </form>
+  <p class="alertMessage" id="alertMessage">알림메시지</p>
+</main>
+
+<script>
+  const titleInput = document.getElementById("title");
+  const dateOfGoalsInput = document.getElementById("dateOfGoals");
+  const dateOfCreateInput = document.getElementById("dateOfCreate");
+  const todoDetailInput = document.getElementById("todoDetail");
+  const alertArea = document.getElementById("alertMessage");
+  const btnSubmit = document.getElementById("btnSubmit");
+  const editForm = document.getElementById("editForm");
+
+  const postId = "<%=post._id %>"; // 넘겨받은 정보 이용
+
+  titleInput.value = "<%=post.title %>"; // 넘겨받은 정보 이용
+  dateOfGoalsInput.value = "<%=post.dateOfGoals %>"; // 넘겨받은 정보 이용
+  todoDetail.value = "<%=post.todoDetail %>"; // 넘겨받은 정보 이용
+
+  editForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    let dateOfCreate = dateOfCreateInput.value;
+    let today = new Date().toISOString().slice(0, 10);
+    dateOfCreateInput.value = today;
+
+    if (!title || !dateOfGoals) {
+      alertArea.innerText = "할일과 목표날짜는 필수 입력사항입니다.";
+      return;
+    }
+
+    if (new Date(dateOfGoals) < new Date(today)) {
+      alertArea.innerText = "목표날짜는 오늘 이후로 입력해주세요.";
+      return;
+    }
+
+    try {
+      const res = await fetch(`/edit/${postId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json", // json 으로 보내기
+        },
+        body: JSON.stringify({
+          // body에 담아 보내기
+          title: titleInput.value,
+          dateOfGoals: dateOfGoalsInput.value,
+          dateOfCreate: dateOfCreateInput.value,
+          todoDetail: todoDetailInput.value,
+        }),
+      });
+      const data = await res.json();
+
+      // 수정 성공하면, list페이지로 이동
+      if (data.success) {
+        location.href = "/list";
+      } else {
+        alertArea.innerText = res.message || "수정실패";
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    // document.querySelector("form").submit();
+  });
+</script>
+
+<%- include('footer.ejs') %>
