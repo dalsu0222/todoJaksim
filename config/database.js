@@ -11,6 +11,7 @@ async function connectDB() {
   try {
     await client.connect();
     db = client.db("todo");
+    global.db = client.db("todo");
     console.log("DB 연결 성공");
     return client;
   } catch (err) {
