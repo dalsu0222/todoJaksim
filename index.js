@@ -49,3 +49,5 @@ process.on("SIGINT", async () => {
 });
 
 start();
+
+export default app;
