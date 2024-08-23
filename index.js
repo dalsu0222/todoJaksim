@@ -25,8 +25,9 @@ app.get("/", function (req, res) {
 
 app.use("/", postRoutes);
 
+let client; // 클라이언트 변수를 전역으로 선언
 async function start() {
-  const client = await connectDB();
+  client = await connectDB();
   await Post.injectDB(client);
 
   if (process.env.VERCEL) {
@@ -39,8 +40,10 @@ async function start() {
 }
 process.on("SIGINT", async () => {
   try {
-    await client.close();
-    console.log("정상 DB 연결 종료");
+    if (client) {
+      await client.close();
+      console.log("정상 DB 연결 종료");
+    }
     process.exit(0);
   } catch (err) {
     console.error("오류에 의한 DB 연결 종료", err);
