@@ -2,8 +2,9 @@ let db;
 
 class Post {
   static async injectDB(conn) {
+    if (db) return;
     try {
-      db = conn.db("todo");
+      db = await conn.db("todo");
       console.log("DB 연결 성공");
     } catch (err) {
       console.error("DB연결 실패 :", err);
