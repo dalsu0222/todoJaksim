@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const MONGO_PASS = process.env.MONGO_PASS;
-const uri = `mongodb+srv://dalsu0222:${MONGO_PASS}@cluster0.rav7e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-const client = new MongoClient(uri);
+const MONGODB_URI = `mongodb+srv://dalsu0222:${MONGO_PASS}@cluster0.rav7e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const client = new MongoClient(MONGODB_URI);
 
 // 데이터베이스 연결 함수
 async function connectDB() {

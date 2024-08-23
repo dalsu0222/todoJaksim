@@ -5,8 +5,8 @@ const path = require("path");
 const { MongoClient, ObjectId } = require("mongodb");
 const { log } = require("console");
 const MONGO_PASS = process.env.MONGO_PASS;
-const uri = `mongodb+srv://dalsu0222:${MONGO_PASS}@cluster0.rav7e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-const client = new MongoClient(uri);
+const MONGODB_URI = `mongodb+srv://dalsu0222:${MONGO_PASS}@cluster0.rav7e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const client = new MongoClient(MONGODB_URI);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
